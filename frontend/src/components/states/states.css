@@ -1,0 +1,84 @@
+/* Loading, error and empty. Every screen uses all three. */
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s3);
+  padding: var(--s7) var(--s5);
+  color: var(--text-muted);
+}
+
+.state--center {
+  align-items: center;
+  text-align: center;
+}
+
+.state__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.state__body {
+  font-size: 13px;
+  max-width: 46ch;
+  line-height: 1.6;
+}
+
+.state__code {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  letter-spacing: 0.01em;
+}
+
+/* A row of bars standing in for the content that is coming, rather than a
+   spinner. It holds the layout still, so nothing jumps when data lands. */
+.skeleton {
+  display: grid;
+  gap: var(--s2);
+  width: 100%;
+}
+
+.skeleton__bar {
+  height: 12px;
+  border-radius: var(--r-sm);
+  background: var(--surface-alt);
+  opacity: 0.75;
+  animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+.skeleton__bar:nth-child(3n + 2) { width: 82%; }
+.skeleton__bar:nth-child(3n + 3) { width: 64%; }
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.85; }
+}
+
+.state__error-mark {
+  width: 3px;
+  align-self: stretch;
+  background: var(--danger);
+  border-radius: 2px;
+}
+
+.state--error {
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--s4);
+  padding: var(--s5);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+}
+
+.state__error-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  align-items: flex-start;
+}

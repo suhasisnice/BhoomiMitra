@@ -1,0 +1,222 @@
+/* The application chrome. Every page behind auth renders inside AppShell.
+
+   Rebuilt as a top nav from the Figma "Case List" frame — white bar, a
+   mauve hairline underneath, wordmark set in Inter rather than the public
+   pages' Judson. Density stays efficient, not generous: 16-24px, tables
+   reading at a glance. The public pages are the other register entirely. */
+
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ---------- Top nav ---------- */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: var(--s6);
+  padding: var(--s4) var(--s6);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topnav__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: none;
+}
+.topnav__brand:hover { text-decoration: none; }
+
+.topnav__wordmark {
+  font-family: var(--font-wordmark);
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  line-height: 1.1;
+}
+
+.topnav__tagline {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.topnav__links {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: 1;
+  justify-content: center;
+}
+
+.topnav__link {
+  padding: 9px var(--s4);
+  border-radius: var(--r-pill);
+  font-family: var(--font-ui);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.topnav__link:hover { color: var(--text); text-decoration: none; }
+.topnav__link.is-active {
+  background: var(--brand-tint);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.topnav__right { display: flex; align-items: center; gap: var(--s4); flex: none; }
+
+.topnav__who { display: flex; flex-direction: column; gap: 1px; text-align: right; min-width: 0; }
+
+.topnav__name { font-size: 13px; font-weight: 600; color: var(--text); }
+
+/* Long officer titles wrap rather than truncating with an ellipsis: an
+   ellipsis on "Special Land Acquisition Officer, Irrigation Division II"
+   hides which division. */
+.topnav__role {
+  font-size: 11px;
+  color: var(--text-faint);
+  max-width: 30ch;
+  line-height: 1.3;
+}
+
+.topnav__avatar {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-pill);
+  background: var(--brand);
+  color: var(--text-on-brand);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.page {
+  padding: var(--s5) var(--s6) var(--s8);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ---------- Page header ---------- */
+/* The eyebrow breadcrumb ("CASE MANAGEMENT / TAMIL NADU") is where scope
+   context lives now — district/state, previously a topbar fragment, reads
+   better here because it is what every one of the frames actually does with
+   it. Pass it as PageHeader's `eyebrow` prop. */
+.page-header__eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--s2);
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s5);
+  margin-bottom: var(--s6);
+}
+
+.page-header__text { min-width: 0; }
+
+.page-header__title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.25;
+  /* The serif cap sits a shade left of the body text beneath it so the two
+     look aligned rather than measuring as aligned. */
+  margin-left: -1px;
+}
+
+.page-header__sub {
+  margin-top: var(--s2);
+  font-size: 15px;
+  font-family: var(--font-display);
+  color: var(--text-muted);
+  max-width: 70ch;
+}
+
+/* A hairline that stops short instead of running the full width. */
+.page-header__rule {
+  width: 64px;
+  height: 1px;
+  background: var(--border-strong);
+  margin-top: var(--s4);
+}
+
+.page-header__actions { display: flex; gap: var(--s3); flex: none; padding-top: var(--s2); }
+
+.back-link {
+  display: inline-block;
+  margin-bottom: var(--s3);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.back-link:hover { color: var(--text); }
+
+/* ---------- Field officer on a phone ---------- */
+@media (max-width: 860px) {
+  .topnav { padding: var(--s3) var(--s4); flex-wrap: wrap; gap: var(--s3); }
+  .topnav__links { order: 3; flex-basis: 100%; justify-content: flex-start; overflow-x: auto; }
+  .topnav__tagline { display: none; }
+  .topnav__who { display: none; }
+
+  .page { padding: var(--s4) var(--s4) var(--s7); }
+
+  .page-header { flex-direction: column; gap: var(--s4); }
+  .page-header__title { font-size: 26px; }
+
+  /* Same reasoning as .btn--link: the back link is a thumb target here. */
+  .back-link { display: inline-flex; align-items: center; min-height: 34px; }
+}
+
+/* The unread badge in the top bar.
+
+   A count, not a red dot with nothing behind it. The number is the whole
+   point — "three things are waiting" is actionable and "something is
+   waiting" is not — so the badge carries a figure and the icon is only what
+   makes it findable. */
+.bell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: var(--r-sm);
+  color: var(--text-muted);
+}
+
+.bell:hover { background: var(--brand-tint); color: var(--text); }
+
+.bell:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.bell.is-active { background: var(--brand-soft); color: var(--text); }
+
+.bell__count {
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-family: var(--font-ui);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-on-brand);
+  background: var(--danger);
+  border-radius: 8px;
+}
