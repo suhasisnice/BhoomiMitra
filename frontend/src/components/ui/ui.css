@@ -1,0 +1,297 @@
+/* Buttons, inputs, badges, modal, table. Small and consistent beats a
+   library this week. No shadows except on the two things that genuinely
+   float; no scale on hover; hover moves a background or border one step. */
+
+/* ---------- Button ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+.btn:hover { text-decoration: none; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn--primary { background: var(--brand); color: var(--text-on-brand); }
+.btn--primary:hover:not(:disabled) { background: var(--brand-hover); }
+
+.btn--secondary { background: var(--brand-soft); color: var(--text); }
+.btn--secondary:hover:not(:disabled) { background: var(--brand-tint); }
+
+.btn--quiet { background: var(--surface-alt); color: var(--text); }
+.btn--quiet:hover:not(:disabled) { background: var(--brand-tint); }
+
+/* Destructive-adjacent: responding "rejected", withdrawing. Never the
+   default action on a screen. */
+.btn--danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+.btn--danger:hover:not(:disabled) { background: var(--danger); color: var(--text-on-brand); }
+
+/* A link that behaves like a button, for table rows and panels where a full
+   button would shout. */
+.btn--link {
+  padding: 0;
+  background: none;
+  color: var(--brand-hover);
+  font-size: 13px;
+  font-weight: 500;
+}
+.btn--link:hover:not(:disabled) { text-decoration: underline; }
+
+.btn--sm { padding: 6px 14px; font-size: 12px; }
+.btn--block { width: 100%; }
+
+/* On a phone a link-styled button is only as tall as its text — around 16px,
+   which is a poor target for a thumb. Desktop keeps the tight inline look;
+   touch widths get a real hit area without moving anything visually, because
+   the extra height is centred on the text. */
+@media (max-width: 860px) {
+  .btn--link {
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+/* Landing-page buttons: serif, and sized off the two real hero frames rather
+   than approximated. The hero band asks for a smaller, more modest button
+   next to its photograph; the statement band below is the page's real call
+   to action and gets the bigger of the two — Figma sizes both explicitly
+   rather than scaling one off the other, so this does too. */
+.btn--public {
+  font-family: var(--font-display);
+  font-size: 22px;
+  padding: 12px 24px;
+  min-height: 49px;
+  border-radius: var(--r-md);
+}
+.btn--public-lg {
+  font-family: var(--font-display);
+  font-size: 28px;
+  padding: 16px 32px;
+  min-height: 68px;
+  border-radius: var(--r-md);
+}
+/* The secondary landing button carries a soft dark outline in the frame that
+   the app's own secondary/quiet buttons don't — scoped to the public
+   context rather than added to .btn--secondary generally. */
+.btn--secondary.btn--public,
+.btn--secondary.btn--public-lg {
+  border: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- Field ---------- */
+.field { display: flex; flex-direction: column; gap: var(--s2); }
+
+.field__label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.field__control {
+  width: 100%;
+  padding: 9px var(--s3);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  font-size: 13px;
+  color: var(--text);
+  transition: border-color 120ms ease;
+}
+.field__control:hover { border-color: var(--text-faint); }
+.field__control::placeholder { color: var(--text-faint); }
+.field__control:disabled { background: var(--surface-alt); color: var(--text-muted); }
+
+textarea.field__control { resize: vertical; min-height: 84px; line-height: 1.55; }
+
+select.field__control {
+  appearance: none;
+  padding-right: var(--s6);
+  background-image: linear-gradient(45deg, transparent 50%, var(--text-muted) 50%),
+    linear-gradient(135deg, var(--text-muted) 50%, transparent 50%);
+  background-position: right 16px top 17px, right 11px top 17px;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.field--invalid .field__control { border-color: var(--danger); }
+
+.field__error { font-size: 12px; color: var(--danger); }
+.field__hint { font-size: 12px; color: var(--text-faint); }
+
+/* ---------- Badge ---------- */
+/* Colour plus a word, always. Never colour alone. CLAUDE.md 3.3. */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px;
+  border-radius: 100px;
+  font-size: 11.5px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.badge__dot { width: 5px; height: 5px; border-radius: 50%; flex: none; }
+
+.badge--ok     { background: var(--ok-bg);     color: var(--ok); }
+.badge--warn   { background: var(--warn-bg);   color: var(--warn); }
+.badge--danger { background: var(--danger-bg); color: var(--danger); }
+.badge--info   { background: var(--info-bg);   color: var(--info); }
+.badge--idle   { background: var(--idle-bg);   color: var(--idle); }
+
+.badge--ok .badge__dot     { background: var(--ok); }
+.badge--warn .badge__dot   { background: var(--warn); }
+.badge--danger .badge__dot { background: var(--danger); }
+.badge--info .badge__dot   { background: var(--info); }
+.badge--idle .badge__dot   { background: var(--idle); }
+
+/* ---------- Modal ---------- */
+/* One of exactly two things in the product that gets a shadow, because it
+   genuinely floats. The other is the map popup. */
+.modal__scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(43, 37, 35, 0.34);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s5);
+  z-index: 50;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: 0 8px 28px rgba(43, 37, 35, 0.16), 0 2px 6px rgba(43, 37, 35, 0.08);
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - var(--s8));
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__head {
+  padding: var(--s5) var(--s5) var(--s4);
+  border-bottom: 1px solid var(--border);
+}
+
+.modal__title { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+.modal__sub { margin-top: var(--s1); font-size: 13px; color: var(--text-muted); }
+
+.modal__body { padding: var(--s5); overflow-y: auto; display: grid; gap: var(--s4); }
+
+.modal__foot {
+  padding: var(--s4) var(--s5);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s3);
+}
+
+.modal__error {
+  padding: var(--s3) var(--s4);
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-left: 3px solid var(--danger);
+  border-radius: var(--r-sm);
+  font-size: 13px;
+}
+
+/* ---------- DataTable ---------- */
+.table-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+/* Wide tables scroll inside their own box; the page body never scrolls
+   sideways. */
+.table-scroll { overflow-x: auto; }
+
+.table { font-size: 13px; }
+
+.table th {
+  background: var(--surface-alt);
+  padding: var(--s3) var(--s4);
+  text-align: left;
+  font-weight: 600;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.table th.num, .table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+.table td {
+  padding: var(--s3) var(--s4);
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.table tbody tr:last-child td { border-bottom: none; }
+
+.table tbody tr.is-clickable { cursor: pointer; }
+.table tbody tr.is-clickable:hover { background: var(--brand-tint); }
+.table tbody tr.is-clickable:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -2px;
+}
+
+/* An overdue row gets a 3px rule and a red date, not a pink wash. Restraint
+   reads as confidence. CLAUDE.md 4.2. */
+.table tbody tr.is-flagged td:first-child {
+  box-shadow: inset 3px 0 0 var(--danger);
+}
+
+.table__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+}
+.table__sort:hover { color: var(--text); }
+.table__sort-mark { font-size: 9px; opacity: 0.75; }
+
+/* A caption in italic serif while everything around it is Inter. One of the
+   deliberate idiosyncrasies from CLAUDE.md 4.2. */
+.table__caption {
+  padding: var(--s3) var(--s4);
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* ---------- Pagination ---------- */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s4);
+  padding: var(--s3) var(--s4);
+  border-top: 1px solid var(--border);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.pager__controls { display: flex; gap: var(--s2); }

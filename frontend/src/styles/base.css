@@ -1,0 +1,114 @@
+@import './tokens.css';
+
+/* Reset, typography defaults, focus ring. Nothing screen-specific. */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+}
+
+p { margin: 0; }
+
+a {
+  color: var(--brand-hover);
+  text-decoration: none;
+}
+a:hover { text-decoration: underline; }
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button { cursor: pointer; }
+
+/* One focus ring for the whole product. Always visible, never removed. */
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+table { border-collapse: collapse; width: 100%; }
+
+/* Numbers align on their digits, not their box — CLAUDE.md 4.2. */
+.num { font-variant-numeric: tabular-nums; text-align: right; }
+
+/* ---------- Cross-page primitives ----------
+   These three are used by pages in four different feature areas, so they
+   live here rather than in whichever page's stylesheet happened to define
+   them first. They previously sat in caselist.css, case.css and
+   dashboard.css and worked from other pages only because every one of
+   those files lands in the same bundle — which stops being true the moment
+   a route is code-split, as /map already is. */
+
+/* Identifiers — case numbers, survey numbers — are set in the mono stack
+   wherever they appear. */
+.case-number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+
+/* The small caps label above a fact on a detail panel. */
+.fact__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  margin-bottom: 3px;
+}
+
+/* A row of "N open · M overdue" counts above a table. */
+.alert-summary {
+  display: flex;
+  gap: var(--s5);
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+.alert-summary b { color: var(--text); font-weight: 600; }
+
+/* Screen-reader-only, for labels a sighted user reads from context. */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* Skip link — first tab stop on every page. */
+.skip-link {
+  position: absolute; left: var(--s4); top: -60px;
+  background: var(--surface); color: var(--text);
+  padding: var(--s2) var(--s4); border: 1px solid var(--border-strong);
+  border-radius: var(--r-md); z-index: 100;
+  transition: top 120ms ease;
+}
+.skip-link:focus { top: var(--s4); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

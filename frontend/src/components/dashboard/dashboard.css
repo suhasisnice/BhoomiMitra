@@ -1,0 +1,198 @@
+/* Density deliberately differs inside this screen: the KPI tiles get air,
+   the alerts table directly beneath them is tight and scannable. Uniform
+   density across a whole screen means nobody decided what mattered.
+   CLAUDE.md 4.2. */
+
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: var(--s4);
+  margin-bottom: var(--s7);
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-xl);
+  padding: var(--s5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--s2);
+  min-width: 0;
+  position: relative;
+}
+
+/* The Case List frame's tile: a coloured left edge and a tinted icon badge
+   sitting up in the corner, both keyed off --kpi-accent/--kpi-icon-* set
+   inline by KpiTile per its `accent` prop. */
+.kpi--accented { padding-left: calc(var(--s5) + 5px); }
+.kpi--accented::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 5px;
+  border-radius: var(--r-xl) 0 0 var(--r-xl);
+  background: var(--kpi-accent);
+}
+
+.kpi__icon {
+  position: absolute;
+  top: var(--s4);
+  right: var(--s4);
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--kpi-icon-bg);
+  color: var(--kpi-icon-color);
+}
+
+/* Clears the icon badge sitting in the corner rather than running under it. */
+.kpi:has(.kpi__icon) .kpi__label,
+.kpi:has(.kpi__icon) .kpi__value { padding-right: 56px; }
+
+/* Label in the editorial serif, value in bold Inter — the frame's own
+   pairing, not the "numbers get the display font" instinct. A big number
+   reads as data, not a headline, so it takes the UI face; the caption above
+   it is closer to a sentence than a label, so it keeps the serif. */
+.kpi__label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.kpi__value {
+  font-family: var(--font-ui);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+/* The unit sits in a lighter weight than the figure it belongs to, so the
+   number carries and the unit explains. */
+.kpi__unit {
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-left: 5px;
+  letter-spacing: 0;
+}
+
+.kpi__of {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* A hairline meter, not a rounded progress bar. Two states, no gradient. */
+.kpi__meter {
+  height: 3px;
+  background: var(--surface-alt);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.kpi__meter-fill { height: 100%; background: var(--ok); }
+.kpi__meter-fill.is-warn { background: var(--warn); }
+.kpi__meter-fill.is-danger { background: var(--danger); }
+
+.kpi__split {
+  display: flex;
+  gap: var(--s4);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-wrap: wrap;
+}
+.kpi__split b { font-weight: 600; color: var(--text); font-variant-numeric: tabular-nums; }
+
+/* ---------- Section headings inside the app register ---------- */
+.section {
+  margin-bottom: var(--s7);
+}
+
+.section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s4);
+  margin-bottom: var(--s4);
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.section__count { font-size: 12.5px; color: var(--text-muted); }
+
+/* ---------- Alerts ---------- */
+.alert-row { display: flex; align-items: baseline; gap: var(--s3); min-width: 0; }
+
+.alert-row__message { min-width: 0; }
+
+/* .alert-summary now lives in styles/base.css — used by Dashboard and Objections. */
+
+/* ---------- Stage distribution ---------- */
+/* A horizontal bar per stage, in statutory order. Not a chart library: nine
+   labelled rows read faster than a pie and keep the legal sequence, which a
+   sorted chart would destroy. */
+.stage-bars { display: grid; gap: var(--s2); }
+
+.stage-bar {
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: minmax(140px, 210px) minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: var(--s4);
+  padding: var(--s1) 0;
+}
+
+.stage-bar__label { font-size: 12.5px; color: var(--text-muted); }
+
+/* display:block matters — these are spans, and an inline element ignores
+   both height and width, which left every bar drawn as a hairline. */
+.stage-bar__track {
+  display: block;
+  height: 14px;
+  background: var(--surface-alt);
+  border-radius: 2px;
+}
+
+.stage-bar__fill {
+  display: block;
+  height: 100%;
+  background: var(--brand-soft);
+  border-radius: 2px;
+  border-right: 2px solid var(--brand);
+  min-width: 2px;
+}
+
+.stage-bar__count {
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--text);
+}
+
+.stage-bar:hover:not(:disabled) .stage-bar__label { color: var(--text); }
+.stage-bar:disabled { cursor: default; }
+.stage-bar.is-empty .stage-bar__count { color: var(--text-faint); }
+
+@media (max-width: 860px) {
+  .kpis { grid-template-columns: 1fr; gap: var(--s3); margin-bottom: var(--s6); }
+  .stage-bar { grid-template-columns: minmax(0, 1fr) 44px; min-height: 36px; }
+  .stage-bar__track { display: none; }
+}

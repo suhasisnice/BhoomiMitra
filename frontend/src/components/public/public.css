@@ -1,0 +1,396 @@
+/* The public register: generous, serif throughout, photography washed.
+
+   The rhythm between bands is deliberately uneven — the hero is tall, the
+   cream band below it breathes wider still, and the photo strip runs flush
+   against both its neighbours with no padding at all. A page where every
+   band has the same 96px reads as generated. CLAUDE.md 4.2. */
+
+.public { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ---------- Header ---------- */
+/* --brand-chrome, not --brand: the header/footer bar and the primary button
+   are two different mauves in the frames, and the chrome one is light enough
+   that its text sits dark, not reversed out. */
+.public-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s5);
+  padding: var(--s4) var(--s7);
+  background: var(--brand-chrome);
+}
+
+.public-header__brand {
+  font-family: var(--font-wordmark);
+  font-weight: 700;
+  /* 56px, tracked tight, off the wordmark layer itself — not approximated. */
+  font-size: 56px;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  line-height: 1.1;
+  /* Hangs a couple of pixels into the left margin so the B reads as flush. */
+  margin-left: -3px;
+}
+.public-header__brand:hover { text-decoration: none; }
+
+.public-header__nav { display: flex; gap: var(--s6); align-items: center; }
+
+.public-header__link {
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+.public-header__link:hover { color: var(--brand-hover); }
+
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center 42%;
+  /* Greens go muted and nothing is punchy. The near-black serif sits on top
+     of this, never reversed out in white. */
+  filter: saturate(0.55) brightness(1.14);
+}
+
+/* A flat cream wash, not a gradient. It is carried far enough that the
+   near-black serif stays legible over the darkest part of the photograph —
+   the vegetation on the left, which is exactly where the text sits. */
+.hero__wash {
+  position: absolute;
+  inset: 0;
+  background: rgba(246, 238, 231, 0.46);
+}
+
+.hero__inner {
+  position: relative;
+  /* Not centred in a container. In the reference the headline hugs the left
+     margin of the photograph, which is what makes it read as set on the
+     image rather than laid over it. */
+  padding: var(--s8) var(--s7) var(--s8) var(--s8);
+  width: 100%;
+  max-width: 1400px;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  /* 56px off the frame's own hero headline layer. */
+  font-size: 56px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  /* Wide enough that the explicit line break in the markup is the only one.
+     A narrower measure re-wrapped it into four ragged lines. */
+  max-width: 42ch;
+  color: var(--text);
+}
+
+.hero__body {
+  margin-top: var(--s4);
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.45;
+  letter-spacing: -0.005em;
+  /* rgba(62,50,57,0.7) is --text at 70% — the frame's own value, not a
+     separate muted hex. Full --text-muted (a different hue) read too grey
+     against the photograph; this keeps the same near-black just softened. */
+  color: rgba(62, 50, 57, 0.7);
+  max-width: 58ch;
+}
+
+.hero__actions { margin-top: var(--s5); display: flex; gap: var(--s4); }
+
+/* ---------- Statement band ---------- */
+.statement {
+  background: var(--bg);
+  text-align: center;
+  /* Wider than the hero's padding — the rhythm changes between bands. */
+  padding: 96px var(--s7) 88px;
+}
+
+.statement__title {
+  font-family: var(--font-display);
+  font-size: 60px;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 34ch;
+  margin: 0 auto;
+}
+
+.statement__body {
+  margin-top: var(--s4);
+  font-family: var(--font-display);
+  font-size: 24px;
+  letter-spacing: -0.005em;
+  /* --text at 70%, same reasoning as .hero__body: the frame's own value. */
+  color: rgba(62, 50, 57, 0.7);
+  max-width: 78ch;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.45;
+}
+
+.statement__actions {
+  margin-top: var(--s5);
+  display: flex;
+  gap: var(--s4);
+  justify-content: center;
+}
+
+/* ---------- Photo strip ---------- */
+/* The grid break, once per page, and the only motion in the product. It runs
+   flush against the band above and the footer below, and drifts continuously
+   left so it never reads as a tidy row of cards. */
+.strip {
+  background: var(--bg);
+  padding-bottom: var(--s3);
+  overflow: hidden;
+  position: relative;
+}
+
+.strip__track {
+  display: flex;
+  width: max-content;
+  animation: strip-drift 60s linear infinite;
+
+  /* The cream wash sits on the TRACK, not on each tile.
+
+     Applied per-tile it created a separate compositing layer for every one
+     of the twenty images, and each had to be re-filtered as the transform
+     moved it — which is what made the drift stutter. One filtered layer that
+     is only translated composites on the GPU and stays smooth. */
+  filter: saturate(0.66) brightness(1.06);
+
+  /* Promote once, up front, so the browser is not deciding mid-animation. */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* The spacing is a margin on each tile, NOT flex `gap`.
+
+   With `gap`, n tiles have only n-1 gaps, so half the track falls half a gap
+   short of where the second copy begins and the loop visibly jumps. Giving
+   every tile its own trailing margin makes the track exactly
+   n × (tile + margin), so translating by -50% lands the second copy where the
+   first started and the seam disappears. */
+.strip__item {
+  flex: none;
+  width: 208px;
+  height: 268px;
+  margin-right: var(--s3);
+  border-radius: var(--r-sm);
+  background-size: cover;
+  background-position: center;
+  background-color: var(--surface-alt);
+}
+
+@keyframes strip-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* There is deliberately no hover rule here.
+
+   Changing animation-duration on hover looked reasonable and was the other
+   half of the stutter: CSS keeps the elapsed time and reinterprets it
+   against the new duration, so the track snapped to a different position the
+   moment the pointer crossed it, and snapped back on leaving. A marquee that
+   can be perturbed by the mouse is not one fluid motion, so it simply
+   is not. */
+
+/* Someone who has asked for less motion gets a strip they can push
+   themselves rather than a frozen half-row. base.css disables the animation;
+   this makes what is left usable. */
+@media (prefers-reduced-motion: reduce) {
+  .strip { overflow-x: auto; scrollbar-width: thin; }
+  .strip__track { animation: none; will-change: auto; }
+}
+
+/* ---------- Footer ---------- */
+/* Same --brand-chrome as the header — the frame uses one mauve for both bars.
+   Text is --text-on-chrome throughout: --brand-chrome sits almost exactly
+   midway in luminance between --text and --text-on-brand, so neither clears
+   4.5:1 here at these smaller sizes (see tokens.css). */
+.public-footer {
+  background: var(--brand-chrome);
+  color: var(--text-on-chrome);
+  padding: var(--s7) var(--s7) var(--s9) var(--s8);
+}
+
+.public-footer__rule {
+  height: 1px;
+  background: rgba(39, 32, 36, 0.16);
+  margin-bottom: var(--s6);
+}
+
+/* Aligned to the same left margin as the hero rather than centred in a
+   container — the two are the same page and must share an edge. The 120px
+   gap and generous column widths are the frame's own footer grid. */
+.public-footer__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) repeat(3, 130px);
+  gap: var(--s10);
+  max-width: 1400px;
+}
+
+.public-footer__brand {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-on-chrome);
+  margin-bottom: var(--s2);
+}
+
+.public-footer__tagline {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--text-on-chrome);
+  max-width: 58ch;
+}
+
+/* No opacity anywhere in this block: --text-on-chrome is already the
+   darkest shade that still reads as "this palette" rather than plain black,
+   and dimming it with alpha blends straight back toward --brand-chrome —
+   which is exactly the contrast failure it exists to fix (see tokens.css).
+   Hierarchy and hover both come from weight and underline instead. */
+.public-footer__social { display: flex; gap: var(--s5); margin-top: var(--s6); }
+.public-footer__social a {
+  color: var(--text-on-chrome);
+  display: inline-flex;
+  padding: var(--s1);
+  border-radius: var(--r-sm);
+}
+/* A wash behind the icon, not a colour change on it: --brand-hover only
+   clears 2.5:1 on this background, well under even the 3:1 an icon needs. */
+.public-footer__social a:hover { background: rgba(39, 32, 36, 0.1); }
+
+.public-footer__heading {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-on-chrome);
+  margin-bottom: var(--s4);
+}
+
+.public-footer__links { display: flex; flex-direction: column; gap: var(--s3); }
+
+.public-footer__links a {
+  font-size: 16px;
+  color: var(--text-on-chrome);
+}
+.public-footer__links a:hover { text-decoration: underline; }
+
+/* ---------- Public content pages (Notices) ---------- */
+.public-page {
+  flex: 1;
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--s8) var(--s7) 96px;
+}
+
+.public-page__title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-left: -1px;
+}
+
+.public-page__lede {
+  margin-top: var(--s4);
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--text-muted);
+  max-width: 72ch;
+}
+
+.public-page__rule {
+  width: 64px;
+  height: 1px;
+  background: var(--border-strong);
+  margin: var(--s5) 0 var(--s6);
+}
+
+.public-page__filters {
+  display: flex;
+  gap: var(--s4);
+  flex-wrap: wrap;
+  margin-bottom: var(--s6);
+  max-width: 640px;
+}
+.public-page__filters > * { min-width: 210px; flex: 1; }
+
+/* A notice reads as a record, not a card: hairline separated, no shadow, no
+   uniform radius. */
+.notice {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr) auto;
+  gap: var(--s5);
+  padding: var(--s5) 0;
+  border-top: 1px solid var(--border);
+  align-items: baseline;
+}
+.notice:last-child { border-bottom: 1px solid var(--border); }
+
+.notice__date {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.notice__title {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.notice__meta {
+  margin-top: var(--s2);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.notice__stage { justify-self: end; }
+
+@media (max-width: 860px) {
+  .public-header { padding: var(--s3) var(--s4); }
+  .public-header__brand { font-size: 38px; display: inline-flex; align-items: center; min-height: 34px; }
+  .public-header__nav { gap: var(--s4); }
+  .public-header__link { font-size: 17px; display: inline-flex; align-items: center; min-height: 34px; }
+
+  .hero { min-height: 440px; }
+  .hero__inner { padding: var(--s7) var(--s4); }
+  .hero__title { font-size: 38px; max-width: none; }
+  .hero__body { font-size: 16px; }
+
+  .statement { padding: var(--s8) var(--s4) var(--s7); }
+  .statement__title { font-size: 40px; }
+  .statement__body { font-size: 16px; }
+
+  /* Smaller tiles mean a shorter track, so the same duration would read as
+     faster. Shortened proportionally to keep the apparent speed constant. */
+  .strip__item { width: 158px; height: 208px; }
+  .strip__track { animation-duration: 46s; }
+
+  .public-footer { padding: var(--s5) var(--s4) var(--s6); }
+  .public-footer__cols { grid-template-columns: 1fr 1fr; gap: var(--s5); }
+
+  .public-page { padding: var(--s6) var(--s4) var(--s7); }
+  .public-page__title { font-size: 26px; }
+
+  .notice { grid-template-columns: 1fr; gap: var(--s2); }
+  .notice__stage { justify-self: start; }
+}

@@ -1,0 +1,128 @@
+/* The filter panel shared by Case List, Audit Trail and Map View.
+
+   One white rounded bar, sections separated by hairlines rather than boxed
+   individually — that reads as one control with several parts, which is
+   what it is, rather than five small unrelated fields in a row. */
+
+.filterbar {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding: 0 var(--s4);
+  margin-bottom: var(--s5);
+  flex-wrap: wrap;
+}
+
+.filterbar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--s2);
+  flex: 1.6 1 220px;
+  padding: var(--s4) var(--s4) var(--s4) 0;
+  color: var(--text-muted);
+  border-right: 1px solid var(--border);
+}
+
+.filterbar__search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+}
+.filterbar__search input::placeholder { color: var(--text-faint); }
+
+/* A field looks like a static label-over-value pair with a chevron, but a
+   real <select> sits on top, fully sized and fully interactive — the
+   visible "value" text underneath is aria-hidden and purely decorative. */
+.filterbar__field {
+  position: relative;
+  flex: 1 1 150px;
+  padding: 9px var(--s4);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+.filterbar__field:last-of-type { border-right: none; }
+
+.filterbar__field-label {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  color: var(--text-faint);
+}
+
+.filterbar__field-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  padding-right: var(--s4);
+}
+
+.filterbar__field-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.filterbar__field-select:focus-visible ~ .filterbar__field-value {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+.filterbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  padding: var(--s3) 0 var(--s3) var(--s4);
+  flex: none;
+}
+
+.filterbar__clear {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px var(--s4);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.filterbar__clear:hover { background: var(--brand-tint); color: var(--text); }
+
+/* Not a button: the frame's "Filters" control opens a panel this app
+   doesn't have, since every filter here is already inline and visible. A
+   count badge tells the truth about what's active instead of a button that
+   would do nothing when clicked. */
+.filterbar__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px var(--s4);
+  border-radius: var(--r-md);
+  background: var(--brand);
+  color: var(--text-on-brand);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+  .filterbar { flex-direction: column; padding: 0 var(--s3); }
+  .filterbar__search,
+  .filterbar__field { border-right: none; border-bottom: 1px solid var(--border); padding: var(--s3) 0; }
+  .filterbar__actions { padding: var(--s3) 0; flex-wrap: wrap; }
+}

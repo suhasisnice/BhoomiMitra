@@ -1,0 +1,293 @@
+/* Case detail and its timeline. */
+
+/* ---------- Stage timeline ---------- */
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+}
+
+.timeline__step {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: var(--s3);
+  padding-bottom: var(--s4);
+  position: relative;
+}
+.timeline__step:last-child { padding-bottom: 0; }
+
+/* The connecting rule runs from each marker to the next, and stops at the
+   last one rather than trailing into nothing. */
+.timeline__step:not(:last-child) .timeline__marker::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 15px;
+  bottom: -4px;
+  width: 1px;
+  transform: translateX(-50%);
+  background: var(--border-strong);
+}
+
+.timeline__marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+}
+
+.timeline__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--border-strong);
+  z-index: 1;
+}
+
+.timeline__body { padding-top: 1px; min-width: 0; }
+
+.timeline__label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.35;
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  flex-wrap: wrap;
+}
+
+/* The section of the Act, in mono at a whisper. Domain specificity beats
+   visual polish — CLAUDE.md 4.4. */
+.timeline__section {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-faint);
+  letter-spacing: 0.01em;
+}
+
+.timeline__meta {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.timeline__meta--ahead { color: var(--text-faint); }
+
+/* Completed */
+.timeline__step.is-done .timeline__dot { background: var(--ok); border-color: var(--ok); }
+.timeline__step.is-done .timeline__label { color: var(--text-muted); font-weight: 400; }
+
+/* Where the case stands. The only emphasised row — a heavier weight and a
+   filled marker, no background wash. */
+.timeline__step.is-current .timeline__dot {
+  background: var(--brand);
+  border-color: var(--brand);
+  width: 11px;
+  height: 11px;
+  box-shadow: 0 0 0 3px var(--brand-tint);
+}
+.timeline__step.is-current .timeline__label { font-weight: 600; }
+
+/* Not reached */
+.timeline__step.is-ahead .timeline__label { color: var(--text-faint); font-weight: 400; }
+.timeline__step.is-ahead .timeline__dot { border-style: dashed; }
+
+/* ---------- Case detail layout ---------- */
+/* 62/38, not half and half. Asymmetry reads as considered. CLAUDE.md 4.2. */
+.case-detail {
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(280px, 0.98fr);
+  gap: var(--s6);
+  align-items: start;
+}
+
+/* A parcel carries far less than a case, and the 62/38 split leaves its
+   left panel stranded half-empty across two thirds of a wide screen. Even
+   columns and a cap on the measure keep the two panels balanced. */
+.case-detail--balanced {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  max-width: 1120px;
+}
+
+.case-detail__main { display: grid; gap: var(--s6); min-width: 0; }
+.case-detail__side { display: grid; gap: var(--s5); min-width: 0; }
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: var(--s5);
+}
+
+.panel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s4);
+}
+
+.panel__title { font-family: var(--font-display); font-size: 16px; font-weight: 700; }
+.panel__count { font-size: 12px; color: var(--text-muted); }
+.panel__view-all { font-size: 12px; color: var(--brand-hover); font-weight: 500; }
+
+/* A count and an action sharing the header need a real gap, not a couple of
+   collapsed spaces. */
+.panel__count--split {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--s4);
+}
+
+/* A panel that holds a table sheds its padding, so the table's own hairlines
+   reach the panel edge instead of floating inside a second box. */
+.panel--table { padding: 0; overflow: hidden; }
+.panel--table .panel__head { padding: var(--s4) var(--s5) 0; margin-bottom: var(--s3); }
+.panel--table .table-wrap { border: none; border-radius: 0; }
+
+/* ---------- Case header facts ---------- */
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(148px, 1fr));
+  gap: var(--s4) var(--s5);
+}
+
+/* .fact__label now lives in styles/base.css — used by three pages. */
+
+.fact__value { font-size: 13px; line-height: 1.45; }
+
+/* The area figure sits in a heavier weight than its unit label. */
+.fact__value strong { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.case-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  flex-wrap: wrap;
+  margin-bottom: var(--s2);
+}
+
+/* ---------- Missing documents ---------- */
+.missing-docs { display: grid; gap: var(--s2); }
+
+.missing-doc {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s3);
+  padding: var(--s2) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+}
+.missing-doc:last-child { border-bottom: none; }
+
+.missing-doc__mark { width: 3px; align-self: stretch; border-radius: 2px; flex: none; }
+.missing-doc.is-missing .missing-doc__mark { background: var(--danger); }
+.missing-doc.is-present .missing-doc__mark { background: var(--ok); }
+
+.missing-doc__name { flex: 1; min-width: 0; }
+.missing-doc.is-missing .missing-doc__name { color: var(--text); }
+.missing-doc.is-present .missing-doc__name { color: var(--text-muted); }
+
+.missing-doc__state { font-size: 11px; color: var(--text-muted); }
+
+/* ---------- People: compensation and R&R as two separate tracks ---------- */
+/* Never one merged column. A person with no land title can still be owed
+   resettlement, and this is the distinction a ministry judge looks for
+   first. CLAUDE.md 2, rule 6. */
+.person-name { display: flex; flex-direction: column; gap: 2px; }
+.person-name__title { font-weight: 500; }
+.person-name__meta { font-size: 11.5px; color: var(--text-muted); }
+
+.track { display: flex; flex-direction: column; gap: 3px; }
+.track__amount { font-variant-numeric: tabular-nums; font-size: 12.5px; }
+.track__none { color: var(--text-faint); font-size: 12px; font-style: italic; }
+
+/* ---------- Audit ---------- */
+.audit { display: grid; gap: 0; }
+
+.audit__row {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: var(--s4);
+  padding: var(--s3) 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 12.5px;
+  align-items: baseline;
+}
+.audit__row:last-child { border-bottom: none; }
+
+.audit__when {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.audit__what { line-height: 1.45; }
+.audit__who { color: var(--text-muted); }
+.audit__detail { color: var(--text-faint); font-size: 11.5px; }
+
+/* ---------- Objection ---------- */
+.objection {
+  padding: var(--s4) 0;
+  border-bottom: 1px solid var(--border);
+}
+.objection:last-child { border-bottom: none; }
+
+.objection__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s3);
+  margin-bottom: var(--s2);
+  flex-wrap: wrap;
+}
+
+.objection__who { font-size: 13px; font-weight: 500; }
+.objection__when { font-size: 11.5px; color: var(--text-muted); }
+.objection__grounds { font-size: 12.5px; line-height: 1.55; color: var(--text); }
+
+.objection__response {
+  margin-top: var(--s3);
+  padding-left: var(--s4);
+  border-left: 2px solid var(--border-strong);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.objection__response-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.objection__actions { margin-top: var(--s3); }
+
+@media (max-width: 1080px) {
+  .case-detail { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 860px) {
+  .facts { grid-template-columns: 1fr 1fr; }
+  .audit__row { grid-template-columns: 1fr; gap: var(--s1); }
+}
+
+/* ---------- Print ---------- */
+/* Cheap, and reads as very government. A case detail printed from the
+   browser should look like something that could go in a file. */
+@media print {
+  .sidebar, .topbar, .page-header__actions, .btn, .skip-link { display: none !important; }
+  .shell { display: block; }
+  .page { padding: 0; }
+  .case-detail { grid-template-columns: 1fr; gap: var(--s5); }
+  .panel { border: 1px solid #999; break-inside: avoid; }
+  body { background: #fff; font-size: 11pt; }
+  .timeline__step.is-ahead { opacity: 0.55; }
+}

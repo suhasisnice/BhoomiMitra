@@ -1,0 +1,179 @@
+/* Parcel map — an illustrated SVG canvas rather than real map tiles, built
+   to the Figma "Map View" frame. See the note at the top of MapView.jsx for
+   what stayed real (every parcel's position, count and attributes) and what
+   didn't (there was never a surveyed boundary to draw). */
+
+.map-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: var(--s5);
+  align-items: start;
+}
+
+.map-frame {
+  height: calc(100vh - 320px);
+  min-height: 420px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  position: relative;
+  background: var(--bg);
+}
+
+.map-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+  user-select: none;
+}
+.map-canvas:active { cursor: grabbing; }
+
+.map-canvas__ground { fill: var(--bg); }
+
+.map-canvas__texture circle {
+  fill: var(--brand-tint);
+  opacity: 0.5;
+}
+
+/* Each parcel: a decorative polygon plus its survey number, both driven by
+   real data (position, area, id) even though the outline itself is drawn,
+   not surveyed. */
+.map-parcel { cursor: pointer; }
+
+.map-parcel polygon {
+  stroke: var(--surface);
+  stroke-width: 2;
+  opacity: 0.88;
+  transition: opacity 120ms ease, stroke-width 120ms ease;
+}
+.map-parcel:hover polygon { opacity: 1; }
+.map-parcel.is-selected polygon {
+  stroke: var(--text);
+  stroke-width: 3;
+  opacity: 1;
+}
+
+.map-parcel text {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  fill: var(--text-on-brand);
+  pointer-events: none;
+  paint-order: stroke;
+  stroke: rgba(62, 50, 57, 0.55);
+  stroke-width: 2.5px;
+}
+
+.map-parcel:focus-visible polygon {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+.map-zoom {
+  position: absolute;
+  right: var(--s4);
+  bottom: var(--s4);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.map-zoom button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  color: var(--text);
+  border: none;
+}
+.map-zoom button:hover { background: var(--brand-tint); }
+
+.map-loading {
+  position: absolute;
+  top: var(--s3);
+  left: var(--s3);
+  padding: 6px var(--s3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-pill);
+  font-size: 11.5px;
+  color: var(--text-muted);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Selected parcel ---------- */
+.map-selected {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-lg);
+  padding: var(--s4);
+  display: grid;
+  gap: var(--s4);
+}
+
+.map-selected__label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.map-selected dl { display: grid; gap: var(--s3); }
+.map-selected dl > div {
+  padding-bottom: var(--s2);
+  border-bottom: 1px solid var(--border);
+}
+.map-selected dl > div:last-of-type { border-bottom: none; padding-bottom: 0; }
+
+.map-selected dt {
+  font-family: var(--font-display);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-bottom: 2px;
+}
+.map-selected dd { margin: 0; font-size: 13.5px; font-weight: 600; }
+
+/* ---------- Legend ---------- */
+.map-side { display: grid; gap: var(--s5); position: sticky; top: 72px; }
+
+.legend { display: grid; gap: var(--s2); }
+
+.legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--s3);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.legend__swatch {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid var(--surface);
+  flex: none;
+}
+
+.legend__count {
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.map-hint {
+  font-size: 12px;
+  color: var(--text-faint);
+  line-height: 1.55;
+}
+
+@media (max-width: 1080px) {
+  .map-shell { grid-template-columns: 1fr; }
+  .map-side { position: static; }
+  .map-frame { height: 60vh; }
+}
